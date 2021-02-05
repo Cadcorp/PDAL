@@ -68,7 +68,10 @@ endfunction()
 #
 # Windows htonl and similar are in winsock :(
 #
-set(WINSOCK_LIBRARY ws2_32)
+# <Cadcorp>
+#set(WINSOCK_LIBRARY ws2_32)
+set(WINSOCK_LIBRARY crypt32 normaliz wldap32 ws2_32)
+# </Cadcorp>
 
 function(pdal_lib_compile_settings target)
     pdal_target_compile_settings(${target})

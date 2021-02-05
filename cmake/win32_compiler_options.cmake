@@ -61,7 +61,10 @@ endfunction()
 #
 # Windows htonl and similar are in winsock :(
 #
-set(WINSOCK_LIBRARY ws2_32)
+# <Cadcorp>
+#set(WINSOCK_LIBRARY ws2_32)
+set(WINSOCK_LIBRARY crypt32 normaliz wldap32 ws2_32)
+# </Cadcorp>
 
 IF(DEFINED ENV{OSGEO4W_HOME})
 	set(CMAKE_INCLUDE_PATH "c:/OSGeo4W64/include;$ENV{CMAKE_INCLUDE_PATH}")

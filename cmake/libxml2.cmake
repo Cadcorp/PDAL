@@ -12,6 +12,9 @@ mark_as_advanced(CLEAR LIBXML2_INCLUDE_DIR)
 mark_as_advanced(CLEAR LIBXML2_LIBRARIES)
 if (LIBXML2_FOUND)
     set(PDAL_HAVE_LIBXML2 1)
+    # <Cadcorp>
+    add_definitions(-DLIBXML_STATIC -DLIBXML2_STATIC)
+    # </Cadcorp>
 else()
     unset(LIBXML2_INCLUDE_DIR CACHE)
     unset(LIBXML2_LIBRARY CACHE)

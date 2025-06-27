@@ -138,7 +138,7 @@ point_count_t SpzReader::read(PointViewPtr view, point_count_t count)
     point_count_t numRead = m_index;
     while (numRead < count)
     {
-        spz::UnpackedGaussian unpacked = m_data->unpack(numRead);
+        spz::UnpackedGaussian unpacked = m_data->unpack((int)numRead);
 
         view->setField(Dimension::Id::X, idx, unpacked.position[0]);
         view->setField(Dimension::Id::Y, idx, unpacked.position[1]);

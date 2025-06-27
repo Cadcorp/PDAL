@@ -1,6 +1,9 @@
 #pragma once
 
+#ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
+#endif
+
 #include <math.h>
 
 #include <array>
@@ -118,7 +121,7 @@ struct GaussianCloud {
     }
     std::sort(scaleSums.begin(), scaleSums.end());
     float median = scaleSums[(int) (scaleSums.size() / 2)];
-    return (M_PI * 4 / 3) * exp(median);
+    return (float)((M_PI * 4 / 3) * exp(median));
   }
 };
 

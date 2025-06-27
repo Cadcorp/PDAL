@@ -100,7 +100,7 @@ TEST(SpzWriterTest, all_dimensions_test)
     
     // setting dims - set rotation later
     // using the same values for each dimension (except rotation)
-    std::array<float, 3> values{0.2, 0.4, 0.6};
+    std::array<float, 3> values{0.2f, 0.4f, 0.6f};
     for (int i = 0; i < 3; i++)
     {
         v->setField(alphaId, i, values[i]);
@@ -114,7 +114,7 @@ TEST(SpzWriterTest, all_dimensions_test)
         
     // Set rotation dimension:
     // make a valid quaternion
-    std::array<float, 4> in{0.1, 0.5, 0.3, 0.2};
+    std::array<float, 4> in{0.1f, 0.5f, 0.3f, 0.2f};
     float norm = std::sqrt(in[0] * in[0] + in[1] * in[1] + in[2] * in[2] + in[3] * in[3]);
     std::array<float, 4> quat{in[0] / norm, in[1] / norm, in[2] / norm, in[3] / norm};
     // Set rotation
@@ -146,9 +146,9 @@ TEST(SpzWriterTest, all_dimensions_test)
 
     // Values in the resulting spz are very off. It's on
     //their end AFAIK (the packing/unpacking is lossy)
-    float tolerance = 0.03;
+    float tolerance = 0.03f;
     // alphas are packed/unpacked more accurately.
-    float alphaTolerance = 0.01;
+    float alphaTolerance = 0.01f;
     for (PointId i = 0; i < readView->size(); ++i)
     {
         EXPECT_NEAR(readView->getFieldAs<float>(alphaId, i), values[i], alphaTolerance);

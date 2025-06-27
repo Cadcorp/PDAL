@@ -319,7 +319,7 @@ H3Error H3_EXPORT(compactCells)(const H3Index *h3Set, H3Index *compactedSet,
         return E_MEMORY_ALLOC;
     }
     H3Index *compactedSetOffset = compactedSet;
-    int numRemainingHexes = numHexes;
+    int numRemainingHexes = (int)numHexes;
     while (numRemainingHexes) {
         res = H3_GET_RESOLUTION(remainingHexes[0]);
         int parentRes = res - 1;

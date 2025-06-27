@@ -70,8 +70,8 @@ void _hex2dToCoordIJK(const Vec2d *v, CoordIJK *h) {
     x1 = a1 + x2 / 2.0;
 
     // check if we have the center of a hex
-    m1 = x1;
-    m2 = x2;
+    m1 = (int)x1;
+    m2 = (int)x2;
 
     // otherwise round correctly
     r1 = x1 - m1;
@@ -130,11 +130,11 @@ void _hex2dToCoordIJK(const Vec2d *v, CoordIJK *h) {
         {
             long long int axisi = h->j / 2;
             long long int diff = h->i - axisi;
-            h->i = h->i - 2.0 * diff;
+            h->i = (int)(h->i - 2.0 * diff);
         } else {
             long long int axisi = (h->j + 1) / 2;
             long long int diff = h->i - axisi;
-            h->i = h->i - (2.0 * diff + 1);
+            h->i = (int)(h->i - (2.0 * diff + 1));
         }
     }
 
@@ -214,6 +214,8 @@ void _ijkScale(CoordIJK *c, int factor) {
  * Returns true if _ijkNormalize with the given input could have a signed
  * integer overflow. Assumes k is set to 0.
  */
+#pragma warning(push)
+#pragma warning(disable:4307)
 bool _ijkNormalizeCouldOverflow(const CoordIJK *ijk) {
     // Check for the possibility of overflow
     int max, min;
@@ -244,6 +246,7 @@ bool _ijkNormalizeCouldOverflow(const CoordIJK *ijk) {
     }
     return false;
 }
+#pragma warning(pop)
 
 /**
  * Normalizes ijk coordinates by setting the components to the smallest possible
@@ -316,6 +319,8 @@ Direction _unitIjkToDigit(const CoordIJK *ijk) {
  *
  * Assumes ijk is IJK+ coordinates (no negative numbers).
  */
+#pragma warning(push)
+#pragma warning(disable:4307)
 H3Error _upAp7Checked(CoordIJK *ijk) {
     // Doesn't need to be checked because i, j, and k must all be non-negative
     int i = ijk->i - ijk->k;
@@ -357,6 +362,7 @@ H3Error _upAp7Checked(CoordIJK *ijk) {
     _ijkNormalize(ijk);
     return E_SUCCESS;
 }
+#pragma warning(pop)
 
 /**
  * Returns non-zero if _upAp7r with the given input could have a signed integer

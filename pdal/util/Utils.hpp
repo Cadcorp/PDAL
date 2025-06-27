@@ -764,25 +764,18 @@ namespace Utils
     }
 
     /**
-      Convert a numeric value from double to float.  Specialization to handle
-      NaN.
+      Convert a numeric value from bool to something.
 
       \param in  Value to convert.
       \param out  Converted value.
       \return  \c true if the conversion was successful, \c false if the
         datatypes/input value don't allow conversion.
     */
-    template<>
-    inline bool numericCast(double in, float& out)
+    template<typename T>
+    inline bool numericCast(bool in, T& out)
     {
-        if ((in <= static_cast<double>((std::numeric_limits<float>::max)()) &&
-            in >= static_cast<double>(std::numeric_limits<float>::lowest())) ||
-            std::isnan(in))
-        {
-            out = static_cast<float>(in);
-            return true;
-        }
-        return false;
+        out = static_cast<T>(in);
+        return true;
     }
 
     /**

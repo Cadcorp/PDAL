@@ -199,7 +199,7 @@ void HexBin::done(PointTableRef table)
         {
             m_grid->flushSamples();
             // Setting this so it gets written to metadata correctly
-            m_sampleSize = m_count;
+            m_sampleSize = (uint32_t)m_count;
         }
         else
             throwError("Sampling for hexbin auto-edge length calculation failed!");

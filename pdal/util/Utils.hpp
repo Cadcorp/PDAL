@@ -738,11 +738,12 @@ namespace Utils
       values are rounded to the nearest integer before a conversion is
       attempted.
 
-      \param in  Value to convert.
+      \param in  Value to convert (not bool).
       \param out  Converted value.
       \return  \c true if the conversion was successful, \c false if the
         datatypes/input value don't allow conversion.
     */
+//    template<typename T_IN, typename T_OUT, std::enable_if_t<!std::is_same<T_IN, bool>::value>* = nullptr>
     template<typename T_IN, typename T_OUT>
     bool numericCast(T_IN in, T_OUT& out)
     {
@@ -764,18 +765,45 @@ namespace Utils
     }
 
     /**
-      Convert a numeric value from bool to something.
+      bool version of the above.
+
+      Convert a numeric value from one type to another.  Floating point
+      values are rounded to the nearest integer before a conversion is
+      attempted.
+
+      \param in  Value to convert (bool).
+      \param out  Converted value.
+      \return  \c true if the conversion was successful, \c false if the
+        datatypes/input value don't allow conversion.
+    */
+//    template<typename T_IN, typename T_OUT, std::enable_if_t<std::is_same<T_IN, bool>::value>* = nullptr>
+    template<typename T_OUT>
+    bool numericCast(bool in, T_OUT& out)
+    {
+        out = static_cast<T_OUT>(in);
+        return true;
+    }
+
+    /**
+      Convert a numeric value from double to float.  Specialization to handle
+      NaN.
 
       \param in  Value to convert.
       \param out  Converted value.
       \return  \c true if the conversion was successful, \c false if the
         datatypes/input value don't allow conversion.
     */
-    template<typename T>
-    inline bool numericCast(bool in, T& out)
+    template<>
+    inline bool numericCast(double in, float& out)
     {
-        out = static_cast<T>(in);
-        return true;
+        if ((in <= static_cast<double>((std::numeric_limits<float>::max)()) &&
+            in >= static_cast<double>(std::numeric_limits<float>::lowest())) ||
+            std::isnan(in))
+        {
+            out = static_cast<float>(in);
+            return true;
+        }
+        return false;
     }
 
     /**

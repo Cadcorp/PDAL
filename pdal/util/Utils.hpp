@@ -738,12 +738,11 @@ namespace Utils
       values are rounded to the nearest integer before a conversion is
       attempted.
 
-      \param in  Value to convert (not bool).
+      \param in  Value to convert.
       \param out  Converted value.
       \return  \c true if the conversion was successful, \c false if the
         datatypes/input value don't allow conversion.
     */
-//    template<typename T_IN, typename T_OUT, std::enable_if_t<!std::is_same<T_IN, bool>::value>* = nullptr>
     template<typename T_IN, typename T_OUT>
     bool numericCast(T_IN in, T_OUT& out)
     {
@@ -776,7 +775,6 @@ namespace Utils
       \return  \c true if the conversion was successful, \c false if the
         datatypes/input value don't allow conversion.
     */
-//    template<typename T_IN, typename T_OUT, std::enable_if_t<std::is_same<T_IN, bool>::value>* = nullptr>
     template<typename T_OUT>
     bool numericCast(bool in, T_OUT& out)
     {

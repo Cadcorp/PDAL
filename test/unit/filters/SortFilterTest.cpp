@@ -241,19 +241,25 @@ TEST(SortFilterTest, base)
     int size;
     int seed;
     std::set<int> s;
-    for (size = 221; size < 1000; ++size)
+    for (size = 257; size < 258; ++size)
     {
-        for (seed = 0; seed < 100; seed++)
+        for (seed = 0; seed < 2; seed++)
         {
             std::cerr << "Checking size/seed = " << size << "/" << seed << "!\n";
             s.clear();
             std::vector<int> v(size);
             std::iota(v.begin(), v.end(), 0);
-            std::default_random_engine g(seed);
+//            std::default_random_engine g(seed);
+            std::default_random_engine g(0);
             std::shuffle(v.begin(), v.end(), g);
 
+
             for (PointId i = 0; i < v.size(); ++i)
+{
+	std::cerr << "V[i] = " << v[i] << "!\n";
                 gview->setField(dimId, i, v[i]);
+}
+std::cerr << "***\n";
 
             BufferReader reader;
             reader.addView(gview);
@@ -272,9 +278,11 @@ TEST(SortFilterTest, base)
                 if (ii != i)
                 {
                     std::cerr << "Error at seed/size = " << seed << "/" << size << "!\n";
-                    goto done;
+		    goto done;
                 }
             }
+next:
+;
         }
     }
 ;

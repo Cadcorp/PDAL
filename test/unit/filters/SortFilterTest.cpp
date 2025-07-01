@@ -40,6 +40,7 @@
 
 #include <pdal/PipelineManager.hpp>
 #include <pdal/StageWrapper.hpp>
+#include <io/BufferReader.hpp>
 #include <io/LasReader.hpp>
 #include <io/LasWriter.hpp>
 #include <filters/SortFilter.hpp>
@@ -231,9 +232,6 @@ TEST(SortFilterTest, base)
     opts.add("order", "ASC");
     opts.add("algorithm", "stable");
 
-    SortFilter filter;
-    filter.setOptions(opts);
-
     PointTable table;
     gview.reset(new PointView(table));
 
@@ -243,7 +241,7 @@ TEST(SortFilterTest, base)
     int size;
     int seed;
     std::set<int> s;
-    for (size = 95; size < 270; ++size)
+    for (size = 221; size < 1000; ++size)
     {
         for (seed = 0; seed < 100; seed++)
         {
@@ -257,10 +255,15 @@ TEST(SortFilterTest, base)
             for (PointId i = 0; i < v.size(); ++i)
                 gview->setField(dimId, i, v[i]);
 
+            BufferReader reader;
+            reader.addView(gview);
+
+            SortFilter filter;
+            filter.setInput(reader);
+            filter.setOptions(opts);
+
             filter.prepare(table);
-            FilterWrapper::ready(filter, table);
-            FilterWrapper::filter(filter, *gview.get());
-            FilterWrapper::done(filter, table);
+            filter.execute(table);
 
             for (PointId i = 0; i < v.size(); ++i)
             {

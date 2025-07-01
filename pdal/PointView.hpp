@@ -603,6 +603,8 @@ public:
         { m_id -= n; return *this; }
     difference_type operator-(const PointViewIter& i) const
         { return static_cast<difference_type>(m_id - i.m_id); }
+    int getId() const
+    { return (int)m_id; }
 
     bool operator==(const PointViewIter& i) const
         { return m_id == i.m_id; }

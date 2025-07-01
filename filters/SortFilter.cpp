@@ -32,6 +32,8 @@
  * OF SUCH DAMAGE.
  ****************************************************************************/
 
+#undef _USE_STD_VECTOR_ALGORITHMS
+
 #include "SortFilter.hpp"
 
 namespace pdal

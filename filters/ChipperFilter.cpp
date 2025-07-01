@@ -126,7 +126,8 @@ void ChipperFilter::load(PointView& view, ChipRefList& xvec, ChipRefList& yvec,
     }
 
     // Sort xvec and assign other index in yvec to sorted indices in xvec.
-    std::stable_sort(xvec.begin(), xvec.end());
+//ABELL
+//    std::stable_sort(xvec.begin(), xvec.end());
     for (size_t i = 0; i < xvec.size(); ++i)
     {
         point_count_t idx = xvec[i].m_ptindex;
@@ -134,7 +135,8 @@ void ChipperFilter::load(PointView& view, ChipRefList& xvec, ChipRefList& yvec,
     }
 
     // Sort yvec.
-    std::stable_sort(yvec.begin(), yvec.end());
+//ABELL
+//    std::stable_sort(yvec.begin(), yvec.end());
 
     // Iterate through the yvector, setting the xvector appropriately.
     for (size_t i = 0; i < yvec.size(); ++i)

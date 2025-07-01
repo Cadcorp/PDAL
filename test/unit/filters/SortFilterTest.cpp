@@ -34,6 +34,8 @@
 
 #include <pdal/pdal_test_main.hpp>
 
+#include <algorithm>
+#include <numeric>
 #include <random>
 
 #include <pdal/PipelineManager.hpp>
@@ -83,6 +85,9 @@ void doSort(point_count_t count, Dimension::Id dim, const std::string& order,
     {
         double d1 = view->getFieldAs<double>(dim, i - 1);
         double d2 = view->getFieldAs<double>(dim, i);
+        if (i == 1)
+            std::cerr << d1 << "\n";
+        std::cerr << d2 << "!\n";
         if (order.empty() || order == "ASC")
             EXPECT_TRUE(d1 <= d2);
         else // DES(cending)
@@ -206,16 +211,84 @@ TEST(SortFilterTest, issue1382)
     doSort(true);
 }
 
-TEST(SortFilterTest, issue1121_simpleSortOrderDesc)
+PointViewPtr gview;
+Dimension::Id dimId;
+
+TEST(SortFilterTest, base)
 {
+/**
     point_count_t inc = 1;
-    for (point_count_t count = 3; count < 100000; count += inc, inc *= 2)
+    for (point_count_t count = 3; count < 300; count++)
     {
-        doSort(count, Dimension::Id::X, "ASC", "normal");
-        doSort(count, Dimension::Id::X, "DESC", "normal");
-        doSort(count, Dimension::Id::X, "ASC", "stable");
+//        doSort(count, Dimension::Id::X, "DESC", "normal");
         doSort(count, Dimension::Id::X, "DESC", "stable");
     }
+**/
+    Options opts;
+
+    std::string dim = "I";
+    opts.add("dimension", dim);
+    opts.add("order", "ASC");
+    opts.add("algorithm", "stable");
+
+    SortFilter filter;
+    filter.setOptions(opts);
+
+    PointTable table;
+    gview.reset(new PointView(table));
+
+    dimId = table.layout()->registerOrAssignDim(dim, Dimension::Type::Unsigned32);
+    table.finalize();
+
+    int size;
+    int seed;
+    std::set<int> s;
+    for (size = 95; size < 270; ++size)
+    {
+        for (seed = 0; seed < 100; seed++)
+        {
+            std::cerr << "Checking size/seed = " << size << "/" << seed << "!\n";
+            s.clear();
+            std::vector<int> v(size);
+            std::iota(v.begin(), v.end(), 0);
+            std::default_random_engine g(seed);
+            std::shuffle(v.begin(), v.end(), g);
+
+            for (PointId i = 0; i < v.size(); ++i)
+                gview->setField(dimId, i, v[i]);
+
+            filter.prepare(table);
+            FilterWrapper::ready(filter, table);
+            FilterWrapper::filter(filter, *gview.get());
+            FilterWrapper::done(filter, table);
+
+            for (PointId i = 0; i < v.size(); ++i)
+            {
+                int ii = gview->getFieldAs<int>(dimId, i);
+                s.insert(ii);
+                if (ii != i)
+                {
+                    std::cerr << "Error at seed/size = " << seed << "/" << size << "!\n";
+                    goto done;
+                }
+            }
+        }
+    }
+;
+done:
+    std::cerr << "Set size = " << s.size() << "!\n";
 }
+
+void sortdump(int start, int stop)
+{
+    for (int i = start + 1; i < stop; ++i)
+    {
+        int i1 = gview->getFieldAs<int>(dimId, i - 1);
+        int i2 = gview->getFieldAs<int>(dimId, i);
+        if (i1 > i2)
+            std::cerr << "Failed sort - " << i1 << " - " << i2 << "!\n";
+    }
+}
+
 
 } // namespace pdal

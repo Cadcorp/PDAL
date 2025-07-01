@@ -240,26 +240,19 @@ TEST(SortFilterTest, base)
 
     int size;
     int seed;
-    std::set<int> s;
     for (size = 257; size < 258; ++size)
     {
-        for (seed = 0; seed < 2; seed++)
+        for (seed = 0; seed < 10000; seed++)
         {
-            std::cerr << "Checking size/seed = " << size << "/" << seed << "!\n";
-            s.clear();
+//            std::cerr << "Checking size/seed = " << size << "/" << seed << "!\n";
             std::vector<int> v(size);
             std::iota(v.begin(), v.end(), 0);
-//            std::default_random_engine g(seed);
-            std::default_random_engine g(0);
+            std::default_random_engine g(seed);
             std::shuffle(v.begin(), v.end(), g);
 
 
             for (PointId i = 0; i < v.size(); ++i)
-{
-	std::cerr << "V[i] = " << v[i] << "!\n";
                 gview->setField(dimId, i, v[i]);
-}
-std::cerr << "***\n";
 
             BufferReader reader;
             reader.addView(gview);
@@ -274,20 +267,19 @@ std::cerr << "***\n";
             for (PointId i = 0; i < v.size(); ++i)
             {
                 int ii = gview->getFieldAs<int>(dimId, i);
-                s.insert(ii);
                 if (ii != i)
                 {
-                    std::cerr << "Error at seed/size = " << seed << "/" << size << "!\n";
-		    goto done;
+//                    std::cerr << "Error at seed/size = " << seed << "/" << size << "!\n";
+		    goto next;
                 }
             }
+	    std::cerr << "Success with seed = " << seed << "!\n";
 next:
 ;
         }
     }
-;
 done:
-    std::cerr << "Set size = " << s.size() << "!\n";
+;
 }
 
 void sortdump(int start, int stop)

@@ -64,7 +64,7 @@ endfunction()
 #
 # <Cadcorp>
 #set(WINSOCK_LIBRARY ws2_32)
-set(WINSOCK_LIBRARY crypt32 normaliz wldap32 ws2_32)
+set(WINSOCK_LIBRARY bcrypt crypt32 iphlpapi normaliz wldap32 ws2_32)
 # </Cadcorp>
 
 IF(DEFINED ENV{OSGEO4W_HOME})
